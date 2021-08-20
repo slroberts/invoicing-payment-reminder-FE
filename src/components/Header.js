@@ -1,7 +1,11 @@
 import React from 'react';
 
 const Header = () => {
-  return <div>Header Component</div>;
+  return (
+    <h1 className='font-sans font-bold uppercase antialiased text-blue-500 py-8'>
+      Invoicing & payment Reminder
+    </h1>
+  );
 };
 
 export default Header;

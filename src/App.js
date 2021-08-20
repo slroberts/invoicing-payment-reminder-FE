@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Landing from './components/pages/Landing';
-import Dashboard from './components/pages/Dashboard';
+import Landing from './pages/Landing';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
-    <div>
+    <div className='container w-full lg:w-5/6 px-8 h-screen '>
       <Router>
         <Header />
         <Switch>
