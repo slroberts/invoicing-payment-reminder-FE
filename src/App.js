@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Landing from './components/Landing';
-import Dashboard from './components/Dashboard';
+import Landing from './components/pages/Landing';
+import Dashboard from './components/pages/Dashboard';
 
 const App = () => {
   return (
