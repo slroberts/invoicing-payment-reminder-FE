@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Button = ({ buttonText }) => {
+const Button = ({ buttonText, onSignInClick, custom }) => {
   return (
     <button
-      onClick={() => console.log('I am a button')}
-      className='mt-3 p-3 w-48 bg-blue-500 hover:bg-blue-700 text-white text-center rounded-full border-none transition duration-300 ease-in-out'
+      onClick={() => onSignInClick()}
+      className={`mt-3 p-3 w-48 text-white text-center rounded-full border-none transition duration-300 ease-in-out ${custom}`}
     >
       {buttonText}
     </button>
