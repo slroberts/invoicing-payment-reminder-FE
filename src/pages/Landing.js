@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../components/Button';
+import GoogleAuthLogin from '../components/GoogleAuthLogin';
 import InvoiceImage from '../images/undraw_Receipt_re_fre3.svg';
 
 const Landing = () => {
@@ -17,7 +17,7 @@ const Landing = () => {
           <h2 className='font-semibold uppercase mt-6 text-gray-400 antialiased'>
             To Get Started
           </h2>
-          <Button buttonText='Login with Google' />
+          <GoogleAuthLogin />
         </div>
         <img
           className='flex-auto md:w-24'
