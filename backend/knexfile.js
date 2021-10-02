@@ -1,5 +1,5 @@
 // Update with your config settings.
-require('dotenv').congif();
+require('dotenv').config();
 
 module.exports = {
   development: {
