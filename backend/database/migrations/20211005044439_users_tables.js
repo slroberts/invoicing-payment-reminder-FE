@@ -1,6 +1,6 @@
 exports.up = function (knex) {
   return knex.schema
-    .createTable('user', function (table) {
+    .createTable('users', function (table) {
       table.increments('id');
       table.string('name', 255).notNullable();
       table.string('email', 255).notNullable().index();
@@ -16,7 +16,7 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('user')
+        .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
     })
@@ -28,7 +28,7 @@ exports.up = function (knex) {
       table
         .integer('user_id')
         .references('id')
-        .inTable('user')
+        .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
       table
