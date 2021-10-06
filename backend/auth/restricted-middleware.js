@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
       : '';
 
     if (token) {
-      jwt.verify(token, secret, (error, decodedToken) => {
+      jwt.verify(token, JWT_SECRET, (error, decodedToken) => {
         if (error) {
           next({
             apiCode: 401,
