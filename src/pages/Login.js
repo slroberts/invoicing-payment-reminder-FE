@@ -3,13 +3,7 @@ import { axiosWithAuth } from '../utils/axiosWithAuth';
 import * as Yup from 'yup';
 import Input from '../components/Input';
 import Button from '../components/Button';
-
-const formSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('A valid email format is required.')
-    .required('An email is required for this field.'),
-  password: Yup.string().required('A Password is a required for this field.'),
-});
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [loginCredentials, setLoginCredentials] = useState({
@@ -19,12 +13,20 @@ const Login = () => {
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [errors, setErrors] = useState('');
+  const [serverError, setServerError] = useState(null);
+
+  const formSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('A valid email format is required.')
+      .required('An email is required for this field.'),
+    password: Yup.string().required('A Password is a required for this field.'),
+  });
 
   useEffect(() => {
     formSchema.isValid(loginCredentials).then((valid) => {
       setButtonDisabled(!valid);
     });
-  }, [loginCredentials]);
+  }, [formSchema, loginCredentials]);
 
   const validateChange = (e) => {
     Yup.reach(formSchema, e.target.name)
@@ -61,16 +63,25 @@ const Login = () => {
         password: loginCredentials.password,
       })
       .then((res) => {
-        console.log(res.data.apiMessage);
-      });
+        console.log(res.data);
+      })
+      .catch((err) =>
+        setServerError('Invalid Login! Try again or create a new account.')
+      );
   };
   return (
-    <div className='mt-32'>
+    <div className='mt-16'>
       <h2 className='font-semibold uppercase text-gray-400 antialiased mb-6 text-center'>
         Login
       </h2>
 
       <form onSubmit={handleSubmit}>
+        {serverError ? (
+          <p className='mx-auto mb-8 w-96 p-4 text-sm text-center rounded-full text-white bg-red-500 transition duration-1000 ease-in-out'>
+            {serverError}
+          </p>
+        ) : null}
+
         <div className='shadow-lg sm:rounded-md w-96 mx-auto'>
           <div className='px-4 py-5 sm:p-6'>
             <Input
@@ -109,7 +120,10 @@ const Login = () => {
               disabled={buttonDisabled}
             />
             <p className='text-center text-sm mt-2'>
-              Not yet registered? create an account
+              Not yet registered?{' '}
+              <Link to='/register' className='underline'>
+                Create an account
+              </Link>
             </p>
           </div>
         </div>
