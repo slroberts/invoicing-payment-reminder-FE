@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -16,6 +17,7 @@ const App = () => {
         <Switch>
           <Route path='/' exact component={Landing} />
           <Route path='/login' exact component={Login} />
+          <Route path='/register' exact component={Register} />
           <PrivateRoute path='/dashboard' exact component={Dashboard} />
         </Switch>
         <Footer />
