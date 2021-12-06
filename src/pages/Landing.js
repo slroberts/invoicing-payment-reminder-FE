@@ -16,13 +16,11 @@ const Landing = () => {
             follow-up reminders about overdue payments.
           </p>
 
-          <Link to='/login'>
-            <Button
-              buttonText='Get Started'
-              custom='bg-blue-500 hover:bg-blue-700 mt-6'
-              to='/Login'
-            />
-          </Link>
+          <div className='mt-8 -ml-2'>
+            <Link to='/login'>
+              <Button buttonText='Get Started' />
+            </Link>
+          </div>
         </div>
         <img
           className='flex-auto md:w-24'

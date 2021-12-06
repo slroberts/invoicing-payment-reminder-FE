@@ -153,12 +153,13 @@ const Register = () => {
                 {errors.confirmPassword}
               </p>
             ) : null}
-            <Button
-              buttonText='Creat An Account'
-              custom='bg-blue-500 hover:bg-blue-700 w-full mb-2'
-              to='/Login'
-              disabled={buttonDisabled}
-            />
+            <div className='-ml-2 mb-4'>
+              <Button
+                buttonText='Creat An Account'
+                to='/Login'
+                disabled={buttonDisabled}
+              />
+            </div>
             <p className='text-center text-sm mt-2'>
               Already registered?{' '}
               <Link to='/login' className='underline'>

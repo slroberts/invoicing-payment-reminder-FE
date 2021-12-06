@@ -113,13 +113,14 @@ const Login = () => {
                 {errors.password}
               </p>
             ) : null}
-            <Button
-              buttonText='Login'
-              custom='bg-blue-500 hover:bg-blue-700 w-full mb-2'
-              to='/Login'
-              disabled={buttonDisabled}
-            />
-            <p className='text-center text-sm mt-2'>
+            <div className='-ml-2 mb-4'>
+              <Button
+                buttonText='Login'
+                to='/Login'
+                disabled={buttonDisabled}
+              />
+            </div>
+            <p className='text-center text-sm mt-2 clear-both'>
               Not yet registered?{' '}
               <Link to='/register' className='underline'>
                 Create an account
