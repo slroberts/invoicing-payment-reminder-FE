@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import GenerateInvoice from './pages/GenerateInvoice';
 
 const App = () => {
   return (
@@ -18,7 +19,12 @@ const App = () => {
           <Route path='/' exact component={Landing} />
           <Route path='/login' exact component={Login} />
           <Route path='/register' exact component={Register} />
-          <PrivateRoute path='/dashboard' exact component={Dashboard} />
+          <Route path='/dashboard' exact component={Dashboard} />
+          <Route
+            path='/dashboard/generate-invoice/client/:id'
+            exact
+            component={GenerateInvoice}
+          />
         </Switch>
         <Footer />
       </Router>
