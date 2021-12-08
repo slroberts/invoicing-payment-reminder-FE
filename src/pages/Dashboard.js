@@ -1,54 +1,117 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { signOut } from '../actions';
-import { useHistory } from 'react-router-dom';
-import { googleAuth } from '../components/helpers';
-import Button from '../components/Button';
-import AddClientImg from '../images/undraw_fill_in_mie5.svg';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { nanoid } from '@reduxjs/toolkit';
 
-const Dashboard = ({ isSignedIn }) => {
-  const history = useHistory();
-  useEffect(() => {
-    googleAuth(onAuthChange);
+import { clientAdded } from '../features/clients/clientsSlice';
+import Input from '../components/Input';
+import Button from '../components/Button';
+import Modal from '../components/Modal';
+import ClientList from '../features/clients/ClientList';
+
+const Dashboard = () => {
+  const clients = useSelector((state) => state.clients);
+
+  const [open, setOpen] = useState(false);
+  const [client, setClient] = useState({
+    name: '',
+    email: '',
+    phone: '',
   });
 
-  const onAuthChange = () => {
-    if (isSignedIn) {
-      signOut();
+  const dispatch = useDispatch();
+
+  const handleButtonClick = (e) => {
+    setOpen(!open);
+
+    setClient({
+      name: '',
+      email: '',
+      phone: '',
+    });
+  };
+
+  const handleChange = (e) => {
+    e.persist();
+    setClient({
+      ...client,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setOpen(!open);
+
+    if (client.name && client.email && client.phone) {
+      dispatch(
+        clientAdded({
+          id: nanoid(),
+          name: client.name,
+          email: client.email,
+          phone: client.phone,
+        })
+      );
     }
   };
 
-  const onSignOutClick = () => {
-    window.gapi.auth2.getAuthInstance().signOut();
-    localStorage.removeItem('Token');
-    history.push('/');
-  };
   return (
     <div>
-      <Button
-        buttonText='Log Out'
-        onSignInClick={onSignOutClick}
-        custom='md:absolute top-8 right-8 -mt-2 md:mt-0 bg-black hover:bg-gray-500'
-      />
+      <div>
+        <p className='text-xl text-gray-400 mt-16'>
+          {clients.length > 0
+            ? 'Generate Invoice or Add Client'
+            : 'Add Client To Generate Invoice'}
+        </p>
 
-      {/* Headline component */}
-      <p className='text-xl text-gray-400 mt-16'>
-        Add Client To Generate Invoice
-      </p>
+        <Modal
+          open={open}
+          setOpen={setOpen}
+          handleButtonClick={handleButtonClick}
+          modalTitle='Client Information'
+        >
+          <div className='mt-4' style={{ width: '27rem' }}>
+            <form onSubmit={handleSubmit}>
+              <Input
+                htmlfor='name'
+                label='Full Name'
+                type='text'
+                name='name'
+                id='clientName'
+                value={client.name}
+                onChange={handleChange}
+              />
+              <Input
+                htmlfor='email'
+                label='Email'
+                type='email'
+                name='email'
+                id='clientEmail'
+                value={client.email}
+                onChange={handleChange}
+                autoComplete='email'
+              />
+              <Input
+                htmlfor='phone'
+                label='Phone Number'
+                type='tel'
+                name='phone'
+                id='clientPhone'
+                value={client.phone}
+                onChange={handleChange}
+              />
+            </form>
+            <div className='py-3 sm:flex sm:flex-row-reverse'>
+              <Button buttonText='Save Client' handleOnClick={handleSubmit} />
+              <Button buttonText='Cancel' handleOnClick={handleButtonClick} />
+            </div>
+          </div>
+        </Modal>
 
-      {/* Add client component */}
-      <div className='mt-16 text-center w-full pb-16 md:pb-0'>
-        <img src={AddClientImg} alt='' className='w-2/5 m-auto opacity-40' />
-        <Button buttonText='Add Client' custom='bg-black mt-16' />
+        <ClientList clients={clients} handleButtonClick={handleButtonClick} />
       </div>
-
-      {/* Client List component */}
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  return { isSignedIn: state.auth.isSignedIn };
-};
-
-export default connect(mapStateToProps, { signOut })(Dashboard);
+export default Dashboard;
