@@ -32,10 +32,9 @@ const InvoiceTaxAndTotal = ({ invoice }) => {
           <div>Total</div>
           <div>US$ {totalAmount()}</div>
         </div>
-
-        <div className='float-right mt-12'>
-          <Button buttonText='Send Invoice' />
-        </div>
+      </div>
+      <div className='float-right mt-12'>
+        <Button buttonText='Send Invoice' />
       </div>
     </div>
   );
