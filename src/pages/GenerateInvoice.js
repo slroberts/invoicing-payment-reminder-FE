@@ -95,10 +95,6 @@ const GenerateInvoice = () => {
           {invoice[invoiceIndex].items.length > 0 ? (
             <InvoiceTaxAndTotal invoice={invoice} />
           ) : null}
-
-          <div className='float-right mt-12'>
-            <Button buttonText='Send Invoice' />
-          </div>
         </div>
       </div>
 
