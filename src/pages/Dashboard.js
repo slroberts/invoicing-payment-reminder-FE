@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 
-import { clientAdded } from '../features/clients/clientsSlice';
+import { addClient } from '../features/clients/clientsSlice';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import ClientList from '../features/clients/ClientList';
 
 const Dashboard = () => {
-  const clients = useSelector((state) => state.clients);
+  const clients = useSelector((state) => state.clients.value);
+  const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
   const [client, setClient] = useState({
@@ -18,8 +18,6 @@ const Dashboard = () => {
     email: '',
     phone: '',
   });
-
-  const dispatch = useDispatch();
 
   const handleButtonClick = (e) => {
     setOpen(!open);
@@ -45,7 +43,7 @@ const Dashboard = () => {
 
     if (client.name && client.email && client.phone) {
       dispatch(
-        clientAdded({
+        addClient({
           id: nanoid(),
           name: client.name,
           email: client.email,
@@ -63,6 +61,8 @@ const Dashboard = () => {
             ? 'Generate Invoice or Add Client'
             : 'Add Client To Generate Invoice'}
         </p>
+
+        <ClientList clients={clients} handleButtonClick={handleButtonClick} />
 
         <Modal
           open={open}
@@ -107,8 +107,6 @@ const Dashboard = () => {
             </div>
           </div>
         </Modal>
-
-        <ClientList clients={clients} handleButtonClick={handleButtonClick} />
       </div>
     </div>
   );
