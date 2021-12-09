@@ -11,15 +11,20 @@ const invoiceSlice = createSlice({
       state.value.push(action.payload);
     },
     addLineItem(state, action) {
-      state.value.forEach((invoice) => {
+      for (const invoice of state.value) {
         if (invoice.id === action.payload.id) {
-          return (state = state.value.items.push(action.payload.item));
+          invoice.items.push(action.payload.item);
         }
-      });
+      }
+    },
+    deleteLineItem(state, action) {
+      for (const invoice of state.value) {
+        invoice.items.splice(action.payload.item, 1);
+      }
     },
   },
 });
 
-export const { addClient, addLineItem } = invoiceSlice.actions;
+export const { addClient, addLineItem, deleteLineItem } = invoiceSlice.actions;
 
 export default invoiceSlice.reducer;

@@ -1,7 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
-const InvoiceItemsTable = ({ items, handleDelete }) => {
-  const renderInvoiceItems = items.map((item) => (
+import { deleteLineItem } from './invoiceSlice';
+
+const InvoiceItemsTable = ({ items }) => {
+  const dispatch = useDispatch();
+
+  const renderInvoiceItems = items.map((item, index) => (
     <tr key={item.id}>
       <td className='px-6 py-4 whitespace-nowrap'>
         <div className='text-sm font-medium text-gray-900'>{item.name}</div>
@@ -14,7 +19,7 @@ const InvoiceItemsTable = ({ items, handleDelete }) => {
       </td>
       <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
         <div
-          onClick={handleDelete}
+          onClick={() => dispatch(deleteLineItem(index))}
           className='text-indigo-600 hover:text-indigo-900'
         >
           Delete
