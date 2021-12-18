@@ -12,7 +12,7 @@ import GenerateInvoice from './pages/GenerateInvoice';
 
 const App = () => {
   return (
-    <div className='container w-full lg:w-5/6 px-8 h-screen '>
+    <div className='container w-full px-4 lg:w-5/6 lg:px-12 md:px-2 h-screen '>
       <Router>
         <Header />
         <Switch>
