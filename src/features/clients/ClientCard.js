@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { deleteClient } from './clientsSlice';
 import { addClient } from '../invoice/invoiceSlice';
 import Button from '../../components/Button';
+import { capitalizeWords } from '../../helpers/helperMethods';
 
 const ClientCard = ({ client, index }) => {
   const dispatch = useDispatch();
@@ -28,7 +29,9 @@ const ClientCard = ({ client, index }) => {
         </svg>
       </button>
 
-      <h2 className='text-lg text-gray-600 mb-4'>{client.name}</h2>
+      <h2 className='text-lg text-gray-600 mb-4'>
+        {capitalizeWords(client.name)}
+      </h2>
       <Link to={`/dashboard/generate-invoice/client/${client.id}`}>
         <Button
           buttonText='Generate Invoice'
@@ -39,6 +42,7 @@ const ClientCard = ({ client, index }) => {
                 name: client.name,
                 email: client.email,
                 phone: client.phone,
+                date: new Date().toLocaleDateString(),
                 items: [],
               })
             )

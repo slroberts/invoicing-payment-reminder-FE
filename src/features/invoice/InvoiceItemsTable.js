@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { capitalizeWords } from '../../helpers/helperMethods';
 
 import { deleteLineItem } from './invoiceSlice';
 
@@ -9,7 +10,9 @@ const InvoiceItemsTable = ({ items }) => {
   const renderInvoiceItems = items.map((item, index) => (
     <tr key={item.id}>
       <td className='px-6 py-4 whitespace-nowrap'>
-        <div className='text-sm font-medium text-gray-900'>{item.name}</div>
+        <div className='text-sm font-medium text-gray-900'>
+          {capitalizeWords(item.name)}
+        </div>
       </td>
       <td className='px-6 py-4 whitespace-nowrap'>
         <div className='text-sm text-gray-900'>$ {item.rate}</div>
