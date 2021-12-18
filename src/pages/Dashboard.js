@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 
+import useForm from '../hooks/useForm';
 import { addClient } from '../features/clients/clientsSlice';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -12,42 +13,21 @@ const Dashboard = () => {
   const clients = useSelector((state) => state.clients.value);
   const dispatch = useDispatch();
 
-  const [open, setOpen] = useState(false);
-  const [client, setClient] = useState({
-    name: '',
-    email: '',
-    phone: '',
-  });
-
-  const handleButtonClick = (e) => {
-    setOpen(!open);
-
-    setClient({
+  const { values, open, setOpen, toggleModal, handleChange, handleSubmit } =
+    useForm({
       name: '',
       email: '',
       phone: '',
     });
-  };
 
-  const handleChange = (e) => {
-    e.persist();
-    setClient({
-      ...client,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setOpen(!open);
-
-    if (client.name && client.email && client.phone) {
+  const onSubmit = (values) => {
+    if (values.name && values.email && values.phone) {
       dispatch(
         addClient({
           id: nanoid(),
-          name: client.name,
-          email: client.email,
-          phone: client.phone,
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
         })
       );
     }
@@ -62,23 +42,23 @@ const Dashboard = () => {
             : 'Add Client To Generate Invoice'}
         </p>
 
-        <ClientList clients={clients} handleButtonClick={handleButtonClick} />
+        <ClientList clients={clients} toggleModal={toggleModal} />
 
         <Modal
           open={open}
           setOpen={setOpen}
-          handleButtonClick={handleButtonClick}
+          toggleModal={toggleModal}
           modalTitle='Client Information'
         >
           <div className='mt-4' style={{ width: '27rem' }}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Input
                 htmlfor='name'
                 label='Full Name'
                 type='text'
                 name='name'
                 id='clientName'
-                value={client.name}
+                value={values.name}
                 onChange={handleChange}
               />
               <Input
@@ -87,7 +67,7 @@ const Dashboard = () => {
                 type='email'
                 name='email'
                 id='clientEmail'
-                value={client.email}
+                value={values.email}
                 onChange={handleChange}
                 autoComplete='email'
               />
@@ -97,13 +77,16 @@ const Dashboard = () => {
                 type='tel'
                 name='phone'
                 id='clientPhone'
-                value={client.phone}
+                value={values.phone}
                 onChange={handleChange}
               />
             </form>
             <div className='py-3 sm:flex sm:flex-row-reverse'>
-              <Button buttonText='Save Client' handleOnClick={handleSubmit} />
-              <Button buttonText='Cancel' handleOnClick={handleButtonClick} />
+              <Button
+                buttonText='Save Client'
+                handleOnClick={handleSubmit(onSubmit)}
+              />
+              <Button buttonText='Cancel' handleOnClick={toggleModal} />
             </div>
           </div>
         </Modal>

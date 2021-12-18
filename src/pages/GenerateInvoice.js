@@ -1,9 +1,10 @@
 /* eslint-disable eqeqeq */
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { nanoid } from '@reduxjs/toolkit';
 
+import useForm from '../hooks/useForm';
 import { addLineItem } from '../features/invoice/invoiceSlice';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
@@ -19,44 +20,23 @@ const GenerateInvoice = () => {
   const { id } = useParams();
   const invoiceIndex = invoice.findIndex((invoice) => invoice.id == id);
 
-  const [open, setOpen] = useState(false);
-  const [item, setItem] = useState({
-    name: '',
-    rate: '',
-    hours: '',
-  });
-
-  const handleButtonClick = () => {
-    setOpen(!open);
-
-    setItem({
+  const { values, open, setOpen, toggleModal, handleChange, handleSubmit } =
+    useForm({
       name: '',
       rate: '',
       hours: '',
     });
-  };
 
-  const handleChange = (e) => {
-    e.persist();
-    setItem({
-      ...item,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setOpen(!open);
-
-    if (item.name && item.rate && item.hours) {
+  const onSubmit = (e) => {
+    if (values.name && values.rate && values.hours) {
       dispatch(
         addLineItem({
           id,
           item: {
             id: nanoid(),
-            name: item.name,
-            rate: item.rate,
-            hours: item.hours,
+            name: values.name,
+            rate: values.rate,
+            hours: values.hours,
           },
         })
       );
@@ -89,7 +69,7 @@ const GenerateInvoice = () => {
           )}
 
           <div className='float-right mt-6'>
-            <Button buttonText='Add Item' handleOnClick={handleButtonClick} />
+            <Button buttonText='Add Item' handleOnClick={toggleModal} />
           </div>
 
           {invoice[invoiceIndex].items.length > 0 ? (
@@ -101,18 +81,18 @@ const GenerateInvoice = () => {
       <Modal
         open={open}
         setOpen={setOpen}
-        handleButtonClick={handleButtonClick}
+        toggleModal={toggleModal}
         modalTitle='Add Item'
       >
         <div className='mt-4' style={{ width: '27rem' }}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               htmlfor='name'
               label='Item Name'
               type='text'
               name='name'
               id='name'
-              value={item.name}
+              value={values.name}
               onChange={handleChange}
             />
             <Input
@@ -121,7 +101,7 @@ const GenerateInvoice = () => {
               type='text'
               name='rate'
               id='rate'
-              value={item.rate}
+              value={values.rate}
               onChange={handleChange}
             />
             <Input
@@ -130,13 +110,16 @@ const GenerateInvoice = () => {
               type='text'
               name='hours'
               id='hours'
-              value={item.hours}
+              value={values.hours}
               onChange={handleChange}
             />
           </form>
           <div className='py-3 sm:flex sm:flex-row-reverse'>
-            <Button buttonText='Add Item' handleOnClick={handleSubmit} />
-            <Button buttonText='Cancel' handleOnClick={handleButtonClick} />
+            <Button
+              buttonText='Add Item'
+              handleOnClick={handleSubmit(onSubmit)}
+            />
+            <Button buttonText='Cancel' handleOnClick={toggleModal} />
           </div>
         </div>
       </Modal>

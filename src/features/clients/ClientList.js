@@ -4,7 +4,7 @@ import AddClientImg from '../../images/undraw_fill_in_mie5.svg';
 import ClientCard from './ClientCard';
 import Button from '../../components/Button';
 
-const ClientList = ({ clients, handleButtonClick }) => {
+const ClientList = ({ clients, toggleModal }) => {
   const renderClients = clients.map((client, index) => (
     <ClientCard key={client.id} client={client} index={index} />
   ));
@@ -18,7 +18,7 @@ const ClientList = ({ clients, handleButtonClick }) => {
       )}
 
       <div className='mt-10'>
-        <Button buttonText='Add Client' handleOnClick={handleButtonClick} />
+        <Button buttonText='Add Client' handleOnClick={toggleModal} />
       </div>
     </div>
   );
