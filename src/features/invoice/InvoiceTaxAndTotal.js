@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '../../components/Button';
 
 const InvoiceTaxAndTotal = ({ invoice }) => {
   const rateTotal = () => {
@@ -32,9 +31,6 @@ const InvoiceTaxAndTotal = ({ invoice }) => {
           <div>Total</div>
           <div>US$ {totalAmount()}</div>
         </div>
-      </div>
-      <div className='float-right mt-12'>
-        <Button buttonText='Send Invoice' />
       </div>
     </div>
   );
