@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { deleteClient } from './clientsSlice';
 import { addClient } from '../invoice/invoiceSlice';
@@ -8,6 +8,7 @@ import Button from '../../components/Button';
 import { capitalizeWords } from '../../helpers/helperMethods';
 
 const ClientCard = ({ client, index }) => {
+  const invoices = useSelector((state) => state.invoice.value);
   const dispatch = useDispatch();
 
   return (
@@ -32,23 +33,29 @@ const ClientCard = ({ client, index }) => {
       <h2 className='text-lg text-gray-600 mb-4'>
         {capitalizeWords(client.name)}
       </h2>
-      <Link to={`/dashboard/generate-invoice/client/${client.id}`}>
-        <Button
-          buttonText='Generate Invoice'
-          handleOnClick={() =>
-            dispatch(
-              addClient({
-                id: client.id,
-                name: client.name,
-                email: client.email,
-                phone: client.phone,
-                date: new Date().toLocaleDateString(),
-                items: [],
-              })
-            )
-          }
-        />
-      </Link>
+      {invoices.filter((invoice) => invoice.id === client.id).length === 0 ? (
+        <Link to={`/dashboard/generate-invoice/client/${client.id}`}>
+          <Button
+            buttonText='Generate Invoice'
+            handleOnClick={() =>
+              dispatch(
+                addClient({
+                  id: client.id,
+                  name: client.name,
+                  email: client.email,
+                  phone: client.phone,
+                  date: new Date().toLocaleDateString(),
+                  items: [],
+                })
+              )
+            }
+          />
+        </Link>
+      ) : (
+        <Link to={`/dashboard/generate-invoice/client/${client.id}`}>
+          <Button buttonText='View Invoice' />
+        </Link>
+      )}
     </div>
   );
 };
