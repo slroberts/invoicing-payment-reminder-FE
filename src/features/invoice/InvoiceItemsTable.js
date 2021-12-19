@@ -24,6 +24,7 @@ const InvoiceItemsTable = ({ items }) => {
         <div
           onClick={() => dispatch(deleteLineItem(index))}
           className='text-indigo-600 hover:text-indigo-900'
+          data-html2canvas-ignore='true'
         >
           Delete
         </div>

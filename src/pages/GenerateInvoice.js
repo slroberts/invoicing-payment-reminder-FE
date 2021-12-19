@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { nanoid } from '@reduxjs/toolkit';
+import { jsPDF } from 'jspdf';
 
 import useForm from '../hooks/useForm';
 import { addLineItem } from '../features/invoice/invoiceSlice';
@@ -43,17 +44,38 @@ const GenerateInvoice = () => {
     }
   };
 
+  const generatePDF = () => {
+    const doc = new jsPDF('l', 'pt', 'tabloid');
+
+    doc.html(document.querySelector('#invoice'), {
+      callback: function (pdf) {
+        pdf.save(
+          invoice
+            .filter((client) => client.id === id)
+            .map((client) => {
+              return `invoice-${client.id}.pdf`;
+            })
+        );
+      },
+      margin: [0, 24, 0, 24],
+      x: 32,
+      y: 32,
+    });
+  };
+
   const renderInvoiceClientInfo = invoice
     .filter((client) => client.id === id)
     .map((client) => <InvoiceClientInfo key={client.id} client={client} />);
 
-  const renderInvoiceItemsTable = invoice.map((invoice) => (
-    <InvoiceItemsTable key={invoice.id} items={invoice.items} />
-  ));
+  const renderInvoiceItemsTable = invoice
+    .filter((client) => client.id === id)
+    .map((invoice) => (
+      <InvoiceItemsTable key={invoice.id} items={invoice.items} />
+    ));
 
   return (
-    <div>
-      <p className='text-xl text-gray-400 mt-4'>Generate Invoice</p>
+    <div id='invoice'>
+      <p className='text-xl text-gray-400 mt-4'>Invoice {invoice.id}</p>
       <div className='flex flex-col justify-center md:flex-row mt-6 divide-y md:divide-x md:divide-y-0'>
         {renderInvoiceClientInfo}
 
@@ -68,12 +90,20 @@ const GenerateInvoice = () => {
             />
           )}
 
-          <div className='float-right mt-6'>
+          <div className='float-right mt-6' data-html2canvas-ignore='true'>
             <Button buttonText='Add Item' handleOnClick={toggleModal} />
           </div>
 
           {invoice[invoiceIndex].items.length > 0 ? (
-            <InvoiceTaxAndTotal invoice={invoice} />
+            <div>
+              <InvoiceTaxAndTotal invoice={invoice} />
+              <div className='float-right mt-12' data-html2canvas-ignore='true'>
+                <Button
+                  buttonText='Generate Invoice'
+                  handleOnClick={generatePDF}
+                />
+              </div>
+            </div>
           ) : null}
         </div>
       </div>
