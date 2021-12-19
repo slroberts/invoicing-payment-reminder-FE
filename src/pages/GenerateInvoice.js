@@ -19,7 +19,6 @@ const GenerateInvoice = () => {
   const invoices = useSelector((state) => state.invoice.value);
   const dispatch = useDispatch();
   const { id } = useParams();
-  const invoiceIndex = invoices.findIndex((invoice) => invoice.id == id);
 
   const { values, open, setOpen, toggleModal, handleChange, handleSubmit } =
     useForm({
@@ -45,7 +44,7 @@ const GenerateInvoice = () => {
   };
 
   const generatePDF = () => {
-    const doc = new jsPDF('l', 'pt', 'legal');
+    const doc = new jsPDF('l', 'pt', 'tabloid');
 
     doc.html(document.querySelector('#invoice'), {
       callback: function (pdf) {
@@ -65,7 +64,7 @@ const GenerateInvoice = () => {
 
   const renderInvoice = invoices
     .filter((client) => client.id === id)
-    .map((invoice) => (
+    .map((invoice, index) => (
       <div
         key={invoice.id}
         className='flex flex-col justify-center md:flex-row mt-6 divide-y md:divide-x md:divide-y-0'
@@ -73,7 +72,7 @@ const GenerateInvoice = () => {
         <InvoiceClientInfo key={invoice.id} invoice={invoice} />
 
         <div className='flex-grow pl-0 pt-12 md:pl-16 md:pt-0'>
-          {invoices[invoiceIndex].items.length > 0 ? (
+          {invoices[index].items.length > 0 ? (
             <div>
               <InvoiceItemsTable items={invoice.items} />
 
@@ -85,7 +84,7 @@ const GenerateInvoice = () => {
 
               <div className='float-right mt-12' data-html2canvas-ignore='true'>
                 <Button
-                  buttonText='Generate Invoice'
+                  buttonText='Download Invoice'
                   handleOnClick={generatePDF}
                 />
               </div>
