@@ -16,10 +16,10 @@ import InvoiceItemsTable from '../features/invoice/InvoiceItemsTable';
 import InvoiceTaxAndTotal from '../features/invoice/InvoiceTaxAndTotal';
 
 const GenerateInvoice = () => {
-  const invoice = useSelector((state) => state.invoice.value);
+  const invoices = useSelector((state) => state.invoice.value);
   const dispatch = useDispatch();
   const { id } = useParams();
-  const invoiceIndex = invoice.findIndex((invoice) => invoice.id == id);
+  const invoiceIndex = invoices.findIndex((invoice) => invoice.id == id);
 
   const { values, open, setOpen, toggleModal, handleChange, handleSubmit } =
     useForm({
@@ -45,15 +45,15 @@ const GenerateInvoice = () => {
   };
 
   const generatePDF = () => {
-    const doc = new jsPDF('l', 'pt', 'tabloid');
+    const doc = new jsPDF('l', 'pt', 'legal');
 
     doc.html(document.querySelector('#invoice'), {
       callback: function (pdf) {
         pdf.save(
-          invoice
-            .filter((client) => client.id === id)
-            .map((client) => {
-              return `invoice-${client.id}.pdf`;
+          invoices
+            .filter((invoice) => invoice.id === id)
+            .map((invoice) => {
+              return `invoice-${invoice.id}.pdf`;
             })
         );
       },
@@ -63,40 +63,26 @@ const GenerateInvoice = () => {
     });
   };
 
-  const renderInvoiceClientInfo = invoice
-    .filter((client) => client.id === id)
-    .map((client) => <InvoiceClientInfo key={client.id} client={client} />);
-
-  const renderInvoiceItemsTable = invoice
+  const renderInvoice = invoices
     .filter((client) => client.id === id)
     .map((invoice) => (
-      <InvoiceItemsTable key={invoice.id} items={invoice.items} />
-    ));
-
-  return (
-    <div id='invoice'>
-      <p className='text-xl text-gray-400 mt-4'>Invoice {invoice.id}</p>
-      <div className='flex flex-col justify-center md:flex-row mt-6 divide-y md:divide-x md:divide-y-0'>
-        {renderInvoiceClientInfo}
+      <div
+        key={invoice.id}
+        className='flex flex-col justify-center md:flex-row mt-6 divide-y md:divide-x md:divide-y-0'
+      >
+        <InvoiceClientInfo key={invoice.id} invoice={invoice} />
 
         <div className='flex-grow pl-0 pt-12 md:pl-16 md:pt-0'>
-          {invoice[invoiceIndex].items.length > 0 ? (
-            <div>{renderInvoiceItemsTable}</div>
-          ) : (
-            <img
-              src={AddClientImg}
-              alt=''
-              className='w-2/5 m-auto opacity-40'
-            />
-          )}
-
-          <div className='float-right mt-6' data-html2canvas-ignore='true'>
-            <Button buttonText='Add Item' handleOnClick={toggleModal} />
-          </div>
-
-          {invoice[invoiceIndex].items.length > 0 ? (
+          {invoices[invoiceIndex].items.length > 0 ? (
             <div>
+              <InvoiceItemsTable items={invoice.items} />
+
+              <div className='float-right mt-6' data-html2canvas-ignore='true'>
+                <Button buttonText='Add Item' handleOnClick={toggleModal} />
+              </div>
+
               <InvoiceTaxAndTotal invoice={invoice} />
+
               <div className='float-right mt-12' data-html2canvas-ignore='true'>
                 <Button
                   buttonText='Generate Invoice'
@@ -104,9 +90,27 @@ const GenerateInvoice = () => {
                 />
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div>
+              <img
+                src={AddClientImg}
+                alt=''
+                className='w-2/5 m-auto opacity-40'
+              />
+              <div className='float-right mt-6' data-html2canvas-ignore='true'>
+                <Button buttonText='Add Item' handleOnClick={toggleModal} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
+    ));
+
+  return (
+    <div id='invoice'>
+      <p className='text-lg font-semibold text-gray-400 mt-4'>{`Invoice # ${id}`}</p>
+
+      {renderInvoice}
 
       <Modal
         open={open}

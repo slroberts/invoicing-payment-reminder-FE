@@ -4,10 +4,8 @@ const InvoiceTaxAndTotal = ({ invoice }) => {
   const rateTotal = () => {
     let sum = 0;
 
-    for (let i of invoice) {
-      for (let item of i.items) {
-        sum += parseFloat(item.rate * item.hours);
-      }
+    for (let item of invoice.items) {
+      sum += parseFloat(item.rate * item.hours);
     }
 
     return sum;
