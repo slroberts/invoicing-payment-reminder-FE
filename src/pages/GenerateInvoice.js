@@ -2,6 +2,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { nanoid } from '@reduxjs/toolkit';
 import { jsPDF } from 'jspdf';
 
@@ -19,6 +20,7 @@ const GenerateInvoice = () => {
   const invoices = useSelector((state) => state.invoice.value);
   const dispatch = useDispatch();
   const { id } = useParams();
+  const history = useHistory();
 
   const { values, open, setOpen, toggleModal, handleChange, handleSubmit } =
     useForm({
@@ -107,7 +109,25 @@ const GenerateInvoice = () => {
 
   return (
     <div id='invoice'>
-      <p className='text-lg font-semibold text-gray-400 mt-4'>{`Invoice # ${id}`}</p>
+      <button onClick={history.goBack} className='flex flex-row text-gray-300'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          className='h-6 w-6 '
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth={2}
+            d='M7 16l-4-4m0 0l4-4m-4 4h18'
+          />
+        </svg>
+        Back to Dashboard
+      </button>
+
+      <p className='text-lg font-semibold text-gray-800 mt-4'>{`Invoice # ${id}`}</p>
 
       {renderInvoice}
 
